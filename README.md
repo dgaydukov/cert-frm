@@ -9,7 +9,7 @@ There are 2 main reasons to get it.
 2. It may help your career
 
 ### Content
-* [FRM Tips](https://github.com/dgaydukov/cert-ocpjp11/blob/master/files/ocpjp11.md)
+* [FRM Tips](https://github.com/dgaydukov/cert-frm/blob/main/frm.md)
 
 ### Useful Links
 * [FRM fees](https://www.garp.org/frm/fees-payments)
