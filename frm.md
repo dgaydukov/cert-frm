@@ -1,10 +1,16 @@
 # FRM Tips
 
 1. [Basics](#basics)
-* 1.1 [Order types](#orders--executions)
+* 1.1 [Order types](#order-types)
+2. [Derivatives](#derivatives)
+* 2.1 [Basic Concepts](#basic-concepts)
+* 2.2 [Futures vs Perpetuals](#futures-vs-perpetuals)
+* 2.3 [Liquidation vs ADL](#liquidation-vs-adl)
+* 2.4 [Option: put vs call](#option-put-vs-call)
+
 
 #### Basics
-###### Orders & executions
+###### Order types
 Order types:
 * limit (can be seen by the market) - execute at specific price (buy at 9k, sell at 11k)
 * stop (also called stop market, can't be seen by the market, until stop price triggered) - execute order at market price when price would be stop price (buy once price would be 9k, actual buy price can be different from 9k)
@@ -24,4 +30,28 @@ Time-in-force - how long order remains active before it get executed/expired (by
 * Post Only (only for limit order) - order accepted only if it not executed immediately, otherwise order would be rejected. So if you quote buy limit with post only with limit price below market - it won't execute immediately, but would be rejected.
 * MOO/MOC (market-on-open, market-on-close) - for traditional stock, where market open/closed daily. Trader submit order when market opens or close.
 
-
+#### Derivatives
+###### Basic Concepts
+* Derivative - financial contract between 2 parties that derive it price from underlying asset (btc derivative - will derive price from spot bitcoin price)
+* Future - type derivative - agreement to buy/sell asset at predetermined future date & price
+###### Futures vs Perpetuals
+###### Liquidation vs ADL
+Don't confuse these 2:
+  * liquidation - attempt to re-sell you position (either long or short) to someone else
+  * ADL (Auto de-leveraging) - closing of your position and the opposite position of counter-party
+Exchange - is nothing more but a facilitator between 2 parties. One opens short position and another long.
+For each number of open short position - equal number of long position should be kept.
+If user1 open long position and user2 open short position, and they were matched, they both have a contract.
+If price goes up, that means user1 will earn money from user2. If user2 runs out of money, his position would be liquidated.
+But user1 still has his position open. So we need urgently someone else to take short position that was kept by user2 before liquidation.
+If nobody would like to take it that means, nobody will pay to user1, in case price still going up. So what should we do.
+Unfortunately exchanges has nothing better, rather then just close 2 position. short - cause nobody taking it, and long - cause there is no short counterpaty.
+Basically what happens is that although user1 want to keep his position open and make money, exchange will forcefully close his position.
+Liquidation goes into 3 steps:
+  * liquidation orderbook - first order get into this special orderbook for liquidated positions
+  * publis orderbook - if nobody takes order from first orderbook, then exchange will try to execute order in public orderbook
+  * liqudation reserve - special reserve that takes order that nobody want to take. This reserve:
+      * take position if nobody else want and pay to user
+      * take maintenanceMargin from liquidated user
+So once liquidation reserve is depleted and nobody can pay to user, then ADL would happen
+###### Option: put vs call
