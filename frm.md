@@ -4,9 +4,10 @@
 * 1.1 [Order types](#order-types)
 2. [Derivatives](#derivatives)
 * 2.1 [Basic Concepts](#basic-concepts)
-* 2.2 [Futures vs Perpetuals](#futures-vs-perpetuals)
-* 2.3 [Liquidation vs ADL](#liquidation-vs-adl)
-* 2.4 [Option: put vs call](#option-put-vs-call)
+* 2.2 [Future Contract](#future-contract)
+* 2.3 [Spread Contract](#spread-contract)
+* 2.4 [Liquidation vs ADL](#liquidation-vs-adl)
+* 2.5 [Option: put vs call](#option-put-vs-call)
 
 
 #### Basics
@@ -34,7 +35,20 @@ Time-in-force - how long order remains active before it get executed/expired (by
 ###### Basic Concepts
 * Derivative - financial contract between 2 parties that derive it price from underlying asset (btc derivative - will derive price from spot bitcoin price)
 * Future - type derivative - agreement to buy/sell asset at predetermined future date & price
-###### Futures vs Perpetuals
+* Basis (funding rate) - difference in price between spot & future market
+* Funding - series of continues payments between longs & shorts, tethers perpetual price to spot price
+###### Future Contract
+There are 3 types of future contract:
+* dated future (vanilla future) - have pre-defined maturity date on which they would be executed, settled in quote currency
+* inverse dated future - same as dated futures, but calculated at inverse
+  p&l calculation:
+    * dated future      => n * m * (exitPrice - entryPrice)
+    * inverse future    => n * m * (1/entryPrice - 1/exitPrice)
+  Don't confuse it with `inverse futures contract` - which settled in base currency
+* perpetual future (perpetuals) - future contract without maturity date. Every 8 hours basis calculated & either one (long or short) payed to counterparty:
+    * perpPrice > spotPrice (contract trades at `premium` to spot) - funding is positive (longs pay to shorts)
+    * perpPrice < spotPrice (contract trades at `discount` to spot) - funding is negative (shorts pay to longs)
+###### Spread Contract
 ###### Liquidation vs ADL
 Don't confuse these 2:
   * liquidation - attempt to re-sell you position (either long or short) to someone else
@@ -53,5 +67,8 @@ Liquidation goes into 3 steps:
   * liqudation reserve - special reserve that takes order that nobody want to take. This reserve:
       * take position if nobody else want and pay to user
       * take maintenanceMargin from liquidated user
-So once liquidation reserve is depleted and nobody can pay to user, then ADL would happen
+So once liquidation reserve is depleted and nobody can pay to user, then ADL would happen:
+    * liquidation reserve will generate new ADL order and submit it to public orderbook
+    * this order would be automatically executed and decrease user position
+    * exchanges use ADL order rather then just change user position to have full trailing
 ###### Option: put vs call
