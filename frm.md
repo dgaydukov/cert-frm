@@ -4,10 +4,10 @@
 * 1.1 [Order types](#order-types)
 2. [Derivatives](#derivatives)
 * 2.1 [Basic Concepts](#basic-concepts)
-* 2.2 [Future Contract](#future-contract)
-* 2.3 [Spread Contract](#spread-contract)
+* 2.2 [Futures](#futures)
+* 2.3 [Spreads](#spreads)
 * 2.4 [Liquidation vs ADL](#liquidation-vs-adl)
-* 2.5 [Option: put vs call](#option-put-vs-call)
+* 2.5 [Options](#options)
 
 
 #### Basics
@@ -37,7 +37,7 @@ Time-in-force - how long order remains active before it get executed/expired (by
 * Future - type derivative - agreement to buy/sell asset at predetermined future date & price
 * Basis (funding rate) - difference in price between spot & future market
 * Funding - series of continues payments between longs & shorts, tethers perpetual price to spot price
-###### Future Contract
+###### Futures
 There are 3 types of future contract:
 * dated future (vanilla future) - have pre-defined maturity date on which they would be executed, settled in quote currency
 * inverse dated future - same as dated futures, but calculated at inverse
@@ -48,7 +48,12 @@ There are 3 types of future contract:
 * perpetual future (perpetuals) - future contract without maturity date. Every 8 hours basis calculated & either one (long or short) payed to counterparty:
     * perpPrice > spotPrice (contract trades at `premium` to spot) - funding is positive (longs pay to shorts)
     * perpPrice < spotPrice (contract trades at `discount` to spot) - funding is negative (shorts pay to longs)
-###### Spread Contract
+###### Spreads
+Spread - type of contract where underlying not real asset (like for futures/options) but difference between 2 assets or 2 derivatives
+Calendar Spread - price difference of 2 futures with same underlying but different maturity date.
+Let's say we have 2 futures one expired in September another in December, then:
+* long - long `BTC/USDC/SEP` + short `BTC/USDC/DEC`
+* short - short `BTC/USDC/SEP` + long `BTC/USDC/DEC`
 ###### Liquidation vs ADL
 Don't confuse these 2:
   * liquidation - attempt to re-sell you position (either long or short) to someone else
@@ -71,4 +76,15 @@ So once liquidation reserve is depleted and nobody can pay to user, then ADL wou
     * liquidation reserve will generate new ADL order and submit it to public orderbook
     * this order would be automatically executed and decrease user position
     * exchanges use ADL order rather then just change user position to have full trailing
-###### Option: put vs call
+###### Options
+There are 2 types of options:
+* call option - right (but not obligation) to buy a stock at specified price (called strike price) before or at specified date
+* put option - right (but not obligation) to sell a stock at specified price (called strike price) before or at specified date
+Keep in mind that you can buy/sell any of these types.
+There are 2 styles of options:
+* european style - option may be executed only on expiry date
+* american style - option may be executed at any time prior to expiry date
+There are several types of options:
+* vanilla - standard options
+* move - price proportional to the swing in the underlying
+* turbo - exotic option
