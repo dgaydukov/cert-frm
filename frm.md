@@ -77,14 +77,50 @@ So once liquidation reserve is depleted and nobody can pay to user, then ADL wou
     * this order would be automatically executed and decrease user position
     * exchanges use ADL order rather then just change user position to have full trailing
 ###### Options
-There are 2 types of options:
+There are 2 types of options (Keep in mind that you can buy/sell any of these types):
 * call option - right (but not obligation) to buy a stock at specified price (called strike price) before or at specified date
 * put option - right (but not obligation) to sell a stock at specified price (called strike price) before or at specified date
-Keep in mind that you can buy/sell any of these types.
+Premium - price of the option contract, based option pricing model:
+  Black-Scholes model - developed in 1973, one of the best way to estimate the price of option contract
+  It designed for european options, cause it doesn't take into account that american options can be executed at any moment prior to expiration date
+  It requires 5 input variables:
+    * strike price of an option
+    * current stock price
+    * expiration time
+    * risk-free rate
+    * volatility
+There are 3 concepts of option price:
+* ATM (at-the-money) - option strike price is identical to the current market price of underlying asset
+* ITM (in-the-money) - option with intrinsic value:
+    * call - marketPrice=30, strikePrice=25, so 30-25=5 is the premium
+    * put - marketPrice=30, strikePrice=35, so 5 - premium or intrinsic price of an option contract
+* OTM (out-of-the-money) - option with only intrinsic value (opposite of ITM):
+    * call - marketPrice=30, strikePrice=35, premium - 0.5. It make no sense to execute such option, cause what the point to buy stock at 35, when market price is 30
+    yet since there is potential to grow, option itself has some intrinsic value of 0.5
+    * put - marketPrice=30, strikePrice=25, premium - 0.5. Again there is no point to sell at 25, when you can sell at 30, 
+    but still cause stock may fall, option cost some money
 There are 2 styles of options:
 * european style - option may be executed only on expiry date
 * american style - option may be executed at any time prior to expiry date
 There are several types of options:
 * vanilla - standard options
-* move - price proportional to the swing in the underlying
-* turbo - exotic option
+* move - direction of price movement not relevant (this is relevant for vanilla), size of price movement matter
+  So it tied to price volatility of underlying asset, so you can speculate on price volatility instead of direction
+  price of move contract reflects expectation about price volatility. So if you beleive price will move up or down a lot you long position
+  otherwise short. Same rules as with straddle if premium (how much you pay) is less then price movement - you win.
+  You open long position (pay 100), current price - 1000, if tomorrow price 1200 - you make 100.
+  For longs - loss can never exceed premium, so longs can never be liquidated
+  Shorts - required margin & can be liquidated
+* turbo - exotic option.
+Option chain (option matrix) - list of all available option contracts (both put & call) for single underlying asset within given maturity period
+Option straddle - strategy buy both call & put option with same strike price and expiration date. Profitable when stock rise/fall from strike price
+  byt more then premium paid. Use it if you anticipate significant move in stock price, but not sure about direction.
+  Let's say stock price is 50%, and call & put option cost 2.5. You buy both for 5 totally. Then 5/50 * 100% = 10%. So price movement should be at least 10% so you can make profit.
+Option greeks - set of risks that can affect the price, named after greek letters:
+* vega - impact of change in volatility
+* theta - impact of change in time remaining
+* delta - impact of change of underlying asset price
+* gamma - range of change in delta
+Minor greeks - in addition to main greeks, there is also not so common minor:
+* rho - rate of change between option value and 1% change in interest rate
+* lambda/epsilon/vomma/vera/speed/zomma/color/ultima.
