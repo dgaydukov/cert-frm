@@ -76,6 +76,9 @@ So once liquidation reserve is depleted and nobody can pay to user, then ADL wou
     * liquidation reserve will generate new ADL order and submit it to public orderbook
     * this order would be automatically executed and decrease user position
     * exchanges use ADL order rather then just change user position to have full trailing
+Liquidation fund (liquidation reserve) - special fund that can pay to user for some time until ADL happen. 
+when liquidation happen & liquidation order is matched in public orderbook below bunkruptcy price, the remaining goes to fund
+this is the way fund is growing
 ###### Options
 There are 2 types of options (Keep in mind that you can buy/sell any of these types):
 * call option - right (but not obligation) to buy a stock at specified price (called strike price) before or at specified date
