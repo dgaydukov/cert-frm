@@ -10,6 +10,7 @@
 * 2.5 [Options](#options)
 
 
+
 #### Basics
 ###### Order types
 Order types:
@@ -33,10 +34,33 @@ Time-in-force - how long order remains active before it get executed/expired (by
 
 #### Derivatives
 ###### Basic Concepts
+There are multiple advantage to trade derivatives:
+* you don't need to have underlying asset (all traded always settled in USD)
+* you can trade in both direction long/short (see first point you can short without actually having real bitcoin)
+* you can use margin & leverage, so trade more than you have (in spot you will need to borrow funds with interest rate. Here basically you
+got free money. So you trade with x100 leverage, but you don't need to pay any interest on that leverage)
+* risk management - there are multiple strategies where you can hedge with derivatives like: buy spot btc and sell 1 btc in future (guaranteed money)
+Concepts:
 * Derivative - financial contract between 2 parties that derive it price from underlying asset (btc derivative - will derive price from spot bitcoin price)
 * Future - type derivative - agreement to buy/sell asset at predetermined future date & price
 * Basis (funding rate) - difference in price between spot & future market
 * Funding - series of continues payments between longs & shorts, tethers perpetual price to spot price
+* IM (Initial margin) - min amount of usd required to open position
+* TAM (total account margin) - total amount of all assets that can be used for margin 
+(usually only USD/USDC can be used for margin, other assets can be used if cross-collaterization is activated)
+* AM (available margin) - available funds to place new orders. 
+    * TAM = usd balance + unrealized p&l (for open positions) - RM (for open spot orders) 
+    * AM = TAM - IM (for open position) - RM (for open perp orders)
+    * as long as TAM > IM - user can send new orders
+* MLT (margin liquidation trigger) - on average 50% of IM, If TAM < MLT, then liquidation process will kick in
+* Bankruptcy price (zero price) - when TAM goes to zero. Usually user will be liquidated before this, so liquidation fee is taken
+Don't confuse:
+* margin - collateral, amount of money user use for trade
+* leverage - multiple of user's margin, that user can trade (user margin - 100, leverage - 20, totalBalanceForTrade = 100*20=2000)
+Don't confuse (price for perp contract):
+* market price - price of last executed trade at particular exchange
+Although market efficency will drive marketPrice to markPrice, since we can have different use cases where large order was submitted or illiquid orderbook, market price may not be fair price sometimes
+* mark price - aggregated fair price (TWAP). So markPrice used to calculate funding.
 ###### Futures
 There are 3 types of future contract:
 * dated future (vanilla future) - have pre-defined maturity date on which they would be executed, settled in quote currency
