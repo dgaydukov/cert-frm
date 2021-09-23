@@ -6,8 +6,9 @@
 * 2.1 [Basic Concepts](#basic-concepts)
 * 2.2 [Futures](#futures)
 * 2.3 [Spreads](#spreads)
-* 2.4 [Liquidation vs ADL](#liquidation-vs-adl)
-* 2.5 [Options](#options)
+* 2.4 [Perpetual, Liquidation, ADL](#perpetual-liquidation-adl)
+* 2.5 [CFD (contract for difference)](#cfd-contract-for-difference)
+* 2.6 [Options](#options)
 
 
 
@@ -45,15 +46,6 @@ Concepts:
 * Future - type derivative - agreement to buy/sell asset at predetermined future date & price
 * Basis (funding rate) - difference in price between spot & future market
 * Funding - series of continues payments between longs & shorts, tethers perpetual price to spot price
-* IM (Initial margin) - min amount of usd required to open position
-* TAM (total account margin) - total amount of all assets that can be used for margin 
-(usually only USD/USDC can be used for margin, other assets can be used if cross-collaterization is activated)
-* AM (available margin) - available funds to place new orders. 
-    * TAM = usd balance + unrealized p&l (for open positions) - RM (for open spot orders) 
-    * AM = TAM - IM (for open position) - RM (for open perp orders)
-    * as long as TAM > IM - user can send new orders
-* MLT (margin liquidation trigger) - on average 50% of IM, If TAM < MLT, then liquidation process will kick in
-* Bankruptcy price (zero price) - when TAM goes to zero. Usually user will be liquidated before this, so liquidation fee is taken
 Don't confuse:
 * margin - collateral, amount of money user use for trade
 * leverage - multiple of user's margin, that user can trade (user margin - 100, leverage - 20, totalBalanceForTrade = 100*20=2000)
@@ -78,7 +70,29 @@ Calendar Spread - price difference of 2 futures with same underlying but differe
 Let's say we have 2 futures one expired in September another in December, then:
 * long - long `BTC/USDC/SEP` + short `BTC/USDC/DEC`
 * short - short `BTC/USDC/SEP` + long `BTC/USDC/DEC`
-###### Liquidation vs ADL
+###### Perpetual, Liquidation, ADL
+Don't confuse:
+* TAM (total account margin) - if xc is off then TAM=AB, if on then TAM=AB + xc adjusted for haircut
+total amount of all assets that can be used for margin 
+(usually only USD/USDC can be used for margin, other assets can be used if cross-collaterization is activated)
+* RM (reserved margin) - margin required for open derivative order (once order is matched RM converted to IM)
+    calculation of RM is same as for IM, if you using leverage you don't need to fully fund RM
+    we need it, if we already have open position with some IM, we can calculate AM/RM
+    Reserved Margin = max(RMB, RMS) - we use this formula, cause they both contribute to TAM and offset each other
+    so we don't need to add them, just get max number
+    * RMB (reserved margin buy) - margin held in open derivative buy orders
+    * RMS (reserved margin sell) - margin held in open derivative sell orders
+* IM (Initial margin) - min amount of usd required to open position
+* AM (available margin) - available funds to place new orders. 
+    * TAM = usd balance + unrealized p&l (for open positions) - RM (for open spot orders) 
+    * AM = TAM - IM (for open position) - RM (for open derivative orders)
+    * as long as TAM > IM - user can send new orders
+don't confuse it with RB - which is for spot orders
+* MLT (margin liquidation trigger) - on average 50% of IM, If TAM < MLT, then liquidation process will kick in
+* Bankruptcy price (zero price) - when TAM goes to zero. Usually user will be liquidated before this, so liquidation fee is taken
+* TB (total balance) = total amount of funds per instrument
+* AB (available balance) = balance adjusted for spot orders
+    AB = TB - RB (reserved balance for spot orders) 
 Don't confuse these 2:
   * liquidation - attempt to re-sell you position (either long or short) to someone else
   * ADL (Auto de-leveraging) - closing of your position and the opposite position of counter-party
@@ -103,6 +117,17 @@ So once liquidation reserve is depleted and nobody can pay to user, then ADL wou
 Liquidation fund (liquidation reserve) - special fund that can pay to user for some time until ADL happen. 
 when liquidation happen & liquidation order is matched in public orderbook below bunkruptcy price, the remaining goes to fund
 this is the way fund is growing
+###### CFD (contract for difference)
+CFD contract stipulates that buyer will pay seller the difference between current price and price at exit
+Like any other derivatives doesn't require real assets.
+So it's agreement between investor & CFD broker to exchange the difference in value between the time you open contract & close.
+price of stock is 10usd. You open long contract for 10k shares with 100x leverage (so you need only 10k USD):
+* price now is 11 => you close contract & realize 10k profit - broker commission (usually 0.2%)
+* price now is 9 => you close contract & realize 10k loss + broker commission
+CFD vs pers:
+* you may notice that they both very similar
+* CFD has no funding
+* you can't open short & long for perp at the same time, yet you can do this with CFD (kind of straddle strategy for options)
 ###### Options
 There are 2 types of options (Keep in mind that you can buy/sell any of these types):
 * call option - right (but not obligation) to buy a stock at specified price (called strike price) before or at specified date
