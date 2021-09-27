@@ -29,7 +29,7 @@ Time-in-force - how long order remains active before it get executed/expired (by
 * DAY (active during day) - cancelled if order is not executed during trading day (common for traditional exchanges)
 * GTC (good till cancel) - order is active until executed or explicitly cancelled by trader
 * FOK (fill or kill) - execute whole order or cancel it (no partial fills allowed)
-* IOC (immediate or cancel) - execute immediately all or partial and cancel all unfilled quantity
+* IOC (immediate or cancel) - execute immediately (either full order or partially) and cancel all unfilled quantity
 * Post Only (only for limit order) - order accepted only if it not executed immediately, otherwise order would be rejected. So if you quote buy limit with post only with limit price below market - it won't execute immediately, but would be rejected.
 * MOO/MOC (market-on-open, market-on-close) - for traditional stock, where market open/closed daily. Trader submit order when market opens or close.
 
@@ -52,7 +52,7 @@ Don't confuse:
 Don't confuse (price for perp contract):
 * market price - price of last executed trade at particular exchange
 Although market efficency will drive marketPrice to markPrice, since we can have different use cases where large order was submitted or illiquid orderbook, market price may not be fair price sometimes
-* mark price - aggregated fair price (TWAP). So markPrice used to calculate funding.
+* mark price (price at which we value derivative contract) - aggregated fair price (TWAP). So markPrice used to calculate funding (calculate as average price across a few major exchanges).
 ###### Futures
 There are 3 types of future contract:
 * dated future (vanilla future) - have pre-defined maturity date on which they would be executed, settled in quote currency
@@ -102,7 +102,7 @@ If user1 open long position and user2 open short position, and they were matched
 If price goes up, that means user1 will earn money from user2. If user2 runs out of money, his position would be liquidated.
 But user1 still has his position open. So we need urgently someone else to take short position that was kept by user2 before liquidation.
 If nobody would like to take it that means, nobody will pay to user1, in case price still going up. So what should we do.
-Unfortunately exchanges has nothing better, rather then just close 2 position. short - cause nobody taking it, and long - cause there is no short counterpaty.
+Unfortunately exchanges has nothing better, rather then just close opposite position. short - cause nobody taking it, and long - cause there is no short counterpaty.
 Basically what happens is that although user1 want to keep his position open and make money, exchange will forcefully close his position.
 Liquidation goes into 3 steps:
   * liquidation orderbook - first order get into this special orderbook for liquidated positions
@@ -114,6 +114,8 @@ So once liquidation reserve is depleted and nobody can pay to user, then ADL wou
     * liquidation reserve will generate new ADL order and submit it to public orderbook
     * this order would be automatically executed and decrease user position
     * exchanges use ADL order rather then just change user position to have full trailing
+ADL use special order of closing => first those with biggest p&l, then with biggest position.
+This is like progressive tax, those who make lots of money, pays the most.
 Liquidation fund (liquidation reserve) - special fund that can pay to user for some time until ADL happen. 
 when liquidation happen & liquidation order is matched in public orderbook below bunkruptcy price, the remaining goes to fund
 this is the way fund is growing
