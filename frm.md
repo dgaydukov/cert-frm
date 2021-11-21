@@ -49,6 +49,10 @@ There are 3 types of future contract:
 * perpetual future (perpetuals) - future contract without maturity date. Every 8 hours basis calculated & either one (long or short) payed to counterparty:
     * perpPrice > spotPrice (contract trades at `premium` to spot) - funding is positive (longs pay to shorts)
     * perpPrice < spotPrice (contract trades at `discount` to spot) - funding is negative (shorts pay to longs)
+forward - special type of future:
+* traded only in otc, not in exchange (so lack of clearing house may create default risk)
+* customized - you can choose maturity date, expiration and so on, yet futures are standard, there is no customization for it
+* settlement takes place only in the end, while futures settled on daily basis
 ###### Spreads
 Spread - type of contract where underlying not real asset (like for futures/options) but difference between 2 assets or 2 derivatives
 Calendar Spread - price difference of 2 futures with same underlying but different maturity date.
