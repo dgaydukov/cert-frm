@@ -9,7 +9,7 @@
 * 2.4 [Perpetual, Liquidation, ADL](#perpetual-liquidation-adl)
 * 2.5 [CFD (contract for difference)](#cfd-contract-for-difference)
 * 2.6 [Options](#options)
-
+* 2.7 [Swaps](#swaps)
 
 
 #### Basics
@@ -64,6 +64,10 @@ There are 3 types of future contract:
 * perpetual future (perpetuals) - future contract without maturity date. Every 8 hours basis calculated & either one (long or short) payed to counterparty:
     * perpPrice > spotPrice (contract trades at `premium` to spot) - funding is positive (longs pay to shorts)
     * perpPrice < spotPrice (contract trades at `discount` to spot) - funding is negative (shorts pay to longs)
+forward - special type of future:
+* traded only in otc, not in exchange (so lack of clearing house may create default risk)
+* customized - you can choose maturity date, expiration and so on, yet futures are standard, there is no customization for it
+* settlement takes place only in the end, while futures settled on daily basis
 ###### Spreads
 Spread - type of contract where underlying not real asset (like for futures/options) but difference between 2 assets or 2 derivatives
 Calendar Spread - price difference of 2 futures with same underlying but different maturity date.
@@ -178,3 +182,35 @@ Option greeks - set of risks that can affect the price, named after greek letter
 Minor greeks - in addition to main greeks, there is also not so common minor:
 * rho - rate of change between option value and 1% change in interest rate
 * lambda/epsilon/vomma/vera/speed/zomma/color/ultima.
+###### Swaps
+* contract between 2 parties to update fixed & floating income
+  * like you have floating interest rate & you can update it for fixed rate
+  * you have floating income, and you update it for fixed income
+* there are several types of swaps:
+  * interest rate swap
+  * currency swap
+  * CDS (credit default swap) - agreement between 3 parties:
+    * debt holder or debtor (insitution or physical client) - pay fixed interest to buyer (like mortgate loan, in this case buyer - bank that gives mortgage)
+    * debt buyer who is also CDS buyer (bank) - pay fixed interest to seller until maturity date of CDS
+    * seller (large bank or insurance company) - ensure that if debtor defaults, will pay all debt + interest on seller (so buyer can pay off to seller all till the maturity date)
+  key facts of CDS:
+      * MBS/CDO - good example of CDS
+      * traded only on OTC market
+      * it doesn't need to cover whole debt term (like bank issue a 10-years loan, but after 5 years decided to hedge & buy CDS for remaining 5 years)
+      * CDS acts like insurance that buyer will get all his money 
+      * credit risk in not eliminated, it's moved to CDS seller, cause now he would ensure to pay off in case debtor defaults
+      * this is what happened in 2008, when CDS sellers like Lehman Brothers, Bear Sterns, AIG defaulted and couldn't pay when a lot of mortgate holders defaulted
+      * buying CDS - improve quality of loan. if debtor not defaults, buyer end up losing some money that would be paid to CDS seller
+MBS (mortgage based security) - bundle mortgages into new instrument & sell it to another bank:
+  * it turns bank into intermediary between homebuyer & investment company
+  * investor who buys MBS is basically lending money to homebuyer
+  * bank provides mortgate to customer, then package it as MBS and sell it with discount, so it records plus on it balance sheet (in case homebuyer defaults it would be the paid of MBS buyer)
+  * this works fine as long as everybody doing it's part of contract  
+  * in 2008 we got subprime MBS crisis, cause bad banks gives a lot of subprime mortgage to people who couldn't repay it, and then immediately sold it as MBS
+CDO (collaterized debt obligation) - structured product based by several debts + assets and sold to investor
+  * bank package several debts like mortgate, bond and sell it as cdo
+  * mbs contain only mortgate, but cdo can contain other types of debt like personal loans, car loans, credit card loans
+  * synthetic cdo - invest into noncash product like cds or options
+repo (repurchage agreement) - temporary swap, when I sell my securities today, and buy them tomorrow at slightly different price:
+  * price difference - acts as interest rate
+  * if i sell stock I may have a deal that new temporary owner would vote the way I want (signed agreement)
