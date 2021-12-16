@@ -68,6 +68,14 @@ forward - special type of future:
 * traded only in otc, not in exchange (so lack of clearing house may create default risk)
 * customized - you can choose maturity date, expiration and so on, yet futures are standard, there is no customization for it
 * settlement takes place only in the end, while futures settled on daily basis
+roll over - moving future contract to a later day:
+* usually happen just before expiration (but can happen at any time)
+* current future contract is closed - all unrealized p&l is settled
+* new future contract for later day is opened
+There are 2 types of settlement:
+* physical delivery - actual product should be delivered to long position (clearing house manage that delivery goes to long and cash to short)
+* cash settlement - only difference in cash is calculated (if marketPrice > futureContractPrice => short pays long the difference, if otherwise - long pay short)
+If you close future contract before expiration no settlement happen - only unrealized p&l is calculate and payed.
 ###### Spreads
 Spread - type of contract where underlying not real asset (like for futures/options) but difference between 2 assets or 2 derivatives
 Calendar Spread - price difference of 2 futures with same underlying but different maturity date.
