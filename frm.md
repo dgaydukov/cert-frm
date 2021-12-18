@@ -10,6 +10,7 @@
 * 2.5 [CFD (contract for difference)](#cfd-contract-for-difference)
 * 2.6 [Options](#options)
 * 2.7 [Swaps](#swaps)
+* 2.8 [Auctions](#auctions)
 
 
 #### Basics
@@ -51,7 +52,7 @@ Don't confuse:
 * leverage - multiple of user's margin, that user can trade (user margin - 100, leverage - 20, totalBalanceForTrade = 100*20=2000)
 Don't confuse (price for perp contract):
 * market price - price of last executed trade at particular exchange
-Although market efficency will drive marketPrice to markPrice, since we can have different use cases where large order was submitted or illiquid orderbook, market price may not be fair price sometimes
+Although market efficiency will drive marketPrice to markPrice, since we can have different use cases where large order was submitted or illiquid orderbook, market price may not be fair price sometimes
 * mark price (price at which we value derivative contract) - aggregated fair price (TWAP). So markPrice used to calculate funding (calculate as average price across a few major exchanges).
 ###### Futures
 There are 3 types of future contract:
@@ -222,3 +223,27 @@ CDO (collaterized debt obligation) - structured product based by several debts +
 repo (repurchage agreement) - temporary swap, when I sell my securities today, and buy them tomorrow at slightly different price:
   * price difference - acts as interest rate
   * if i sell stock I may have a deal that new temporary owner would vote the way I want (signed agreement)
+###### Auctions
+* serve as price discovery 
+* in traditional finance usually run in the beginning/end of the day to determine real market price
+* can also be run at any time
+Auction process:
+* during normal trading ppl can send auctions orders:
+    * they won't be visible in public orderbook
+    * they won't be matched against existing orders
+    * they would sit in orderbook and wait until auctions start
+* auctions start and normal trading stops (usually auctions lasts for a few minutes)
+* during auctions normal trading stops
+* users submit 2 types of orders: 
+    * auction market order - without price
+    * auction limit order - limit order with limit price
+* auction algorithm start to work
+    * calculate price at which max number of liquidity can be executed
+    * execute all trades based on this liquidity
+* remaining orders left after auction is done, goes to public orderbook
+As you can see this is perfect instrument to quickly decide market price and start trading
+It can also be used to discovery price for dated future (settlement price), options, equity
+Although crypto trades 24/7 there are still disruption, in such cases price auction is a good way to resume trading activity after disruption event
+currently 2 crypto markets support auctions:
+* [gemini](https://support.gemini.com/hc/en-us/articles/213565166-How-does-Auction-work-)
+* [delta](https://www.delta.exchange/blog/bootstrapping-liquidity-using-auctions)
