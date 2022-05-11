@@ -2,6 +2,7 @@
 
 1. [Basics](#basics)
 * 1.1 [Order types](#order-types)
+* 1.2 [Money supply](#money-supply)
 2. [Derivatives](#derivatives)
 * 2.1 [Basic Concepts](#basic-concepts)
 * 2.2 [Futures](#futures)
@@ -247,3 +248,11 @@ Although crypto trades 24/7 there are still disruption, in such cases price auct
 currently 2 crypto markets support auctions:
 * [gemini](https://support.gemini.com/hc/en-us/articles/213565166-How-does-Auction-work-)
 * [delta](https://www.delta.exchange/blog/bootstrapping-liquidity-using-auctions)
+
+###### Money supply
+There are different types of money like cash and time deposits. Although both of money, yet they have different liquidity. 100 usd bill is 
+super liquid, while time deposit is not, you need to do extra work to be able to spend such deposit. 
+In order to distinguish money based on their liquidity we have several money types:
+* m1 - cash and checkable deposit (owner can withdraw money without notice)
+* m2 - m2 + savings (less then 100k usd) + short-term time deposit
+* m3 - m2 + long term deposits
